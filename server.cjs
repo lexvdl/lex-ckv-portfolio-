@@ -1,8 +1,8 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const files = new Set(['index.html', 'dans.html', 'film.html', 'muziek.html', 'schilderkunst.html', 'styles.css', 'script.js']);
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
+const files = new Set(['index.html', 'dans.html', 'film.html', 'muziek.html', 'schilderkunst.html', 'styles.css', 'script.js', 'CKV CZP verslag.pdf', 'photo_2026-10-19_08-13-48.jpg']);
+const types = { '.pdf': 'application/pdf', '.jpg': 'image/jpeg', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
 const server = http.createServer((req, res) => {
   let name;
   try { name = decodeURIComponent(new URL(req.url, 'http://localhost').pathname).slice(1) || 'index.html'; }

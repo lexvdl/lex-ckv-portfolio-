@@ -18,6 +18,10 @@ if (document.querySelector('#file-search')) {
   const list = document.querySelector('.assignments .assignments-list');
   const subject = document.querySelector('#subject-title')?.textContent.trim();
   const emptyState = list?.firstElementChild?.cloneNode(true);
+  const publicFiles = [
+    { id: 'public-photo', name: 'photo_2026-10-19_08-13-48.jpg', subject: 'Schilderkunst', url: 'photo_2026-10-19_08-13-48.jpg', addedAt: 1792400000000, file: { size: 157903, type: 'image/jpeg' } },
+    { id: 'public-ckv', name: 'CKV CZP verslag.pdf', subject: 'Schilderkunst', url: 'CKV%20CZP%20verslag.pdf', addedAt: 1792400000001, file: { size: 621879, type: 'application/pdf' } }
+  ];
   const urls = [];
   let db;
   if (addFileButton) addFileButton.disabled = true;
@@ -55,14 +59,17 @@ if (document.querySelector('#file-search')) {
     const extension = record.name.split('.').pop().toLowerCase();
     const type = record.file.type;
     const isPdf = type === 'application/pdf' || extension === 'pdf';
-    previewUrl = URL.createObjectURL(isPdf ? record.file.slice(0, record.file.size, 'application/pdf') : record.file);
+    previewUrl = record.url || URL.createObjectURL(isPdf ? record.file.slice(0, record.file.size, 'application/pdf') : record.file);
     viewer.querySelector('h2').textContent = record.name;
     const download = viewer.querySelector('a');
     download.href = previewUrl;
     download.download = record.name;
     viewer.showModal();
     // Update only an existing record so a deleted file cannot be restored accidentally.
-    transaction('readwrite', (store) => {
+    if (record.url) {
+      record.lastOpenedAt = Date.now();
+      renderFiles();
+    } else transaction('readwrite', (store) => {
       const request = store.get(record.id);
       request.onsuccess = () => {
         if (request.result) store.put({ ...request.result, lastOpenedAt: Date.now() });
@@ -148,7 +155,7 @@ if (document.querySelector('#file-search')) {
   const nameOrder = new Intl.Collator('nl', { numeric: true, sensitivity: 'base' });
   function compareFiles(a, b) {
     // Auto-incremented IDs preserve the original upload order, including older files.
-    const newest = b.id - a.id;
+    const newest = (b.addedAt || Number(b.id) || 0) - (a.addedAt || Number(a.id) || 0);
     switch (sortSelect?.value) {
       case 'oldest': return -newest;
       case 'recent': return ((b.lastOpenedAt || 0) - (a.lastOpenedAt || 0)) || newest;
@@ -160,10 +167,10 @@ if (document.querySelector('#file-search')) {
     }
   }
   sortSelect?.addEventListener('change', () => {
-    if (db) renderFiles().catch(() => { status.textContent = 'Sorteren is niet gelukt. Probeer het opnieuw.'; });
+    renderFiles().catch(() => { status.textContent = 'Sorteren is niet gelukt. Probeer het opnieuw.'; });
   });
   async function renderFiles() {
-    const records = await transaction('readonly', (store) => store.getAll());
+    const records = [...publicFiles, ...(db ? await transaction('readonly', (store) => store.getAll()) : [])];
     searchInput.disabled = false;
     searchRecords = records;
     searchFiles();
@@ -208,8 +215,8 @@ if (document.querySelector('#file-search')) {
       const actions = document.createElement('div');
       actions.className = 'file-actions';
       const download = document.createElement('a');
-      const url = URL.createObjectURL(record.file);
-      urls.push(url);
+      const url = record.url || URL.createObjectURL(record.file);
+      if (!record.url) urls.push(url);
       download.href = url;
       download.download = record.name;
       download.className = 'file-icon-action';
@@ -235,7 +242,8 @@ if (document.querySelector('#file-search')) {
           remove.disabled = false;
         }
       });
-      actions.append(download, remove);
+      actions.append(download);
+      if (!record.url) actions.append(remove);
       row.append(details, actions);
       list.append(row);
     });
@@ -268,7 +276,8 @@ if (document.querySelector('#file-search')) {
       }
       if (addFileButton) addFileButton.disabled = false;
     } catch {
-      searchStatus.textContent = 'Zoeken is niet beschikbaar: de browseropslag kon niet worden geopend.';
+      db = null;
+      await renderFiles();
       status.textContent = 'Deze browser kan bestanden hier niet bewaren. Open de website in een normale browser met lokale opslag ingeschakeld.';
     }
   }
@@ -295,7 +304,7 @@ if (document.querySelector('#file-search')) {
     }
   });
   window.addEventListener('focus', () => {
-    if (db) renderFiles().catch(() => { searchStatus.textContent = 'Bestanden vernieuwen is niet gelukt. Vernieuw de pagina.'; });
+    renderFiles().catch(() => { searchStatus.textContent = 'Bestanden vernieuwen is niet gelukt. Vernieuw de pagina.'; });
   });
   initialize();
 }
