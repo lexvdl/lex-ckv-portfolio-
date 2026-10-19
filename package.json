@@ -1,0 +1,5 @@
+{
+  "name": "lex-ckv-portfolio",
+  "private": true,
+  "scripts": { "dev": "node server.cjs" }
+}

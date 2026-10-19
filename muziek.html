@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mijn CKV-opdrachten voor Muziek." />
+  <title>Muziek | Portfolio lex CKV</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="brand-dot"></span>LEX CKV</a>
+<section class="portfolio-search hero-search topbar-search" aria-labelledby="search-title">
+      <p class="eyebrow">vind je werk</p>
+      <h2 id="search-title">Zoek een bestand</h2>
+      <label for="file-search">Zoek op bestandsnaam in alle kunstvormen</label>
+      <input id="file-search" type="search" placeholder="Zoeken" disabled aria-controls="search-results" />
+      <p id="search-status" role="status">Bestanden laden...</p>
+      <div id="search-results" class="assignments-list"></div>
+    </section>
+    <nav class="nav" aria-label="Hoofdnavigatie"><a href="index.html">Home</a><a href="index.html#vormen">Alle vormen</a></nav>
+    <button class="menu-button" type="button" aria-label="Menu openen" aria-expanded="false"><span></span><span></span></button>
+  </header>
+  <main id="top">
+    <section class="subject-hero music" aria-labelledby="subject-title">
+      <a class="arrow-link" href="index.html#vormen">&larr; Terug naar de vormen</a>
+      <p class="eyebrow">03 / Portfolio lex CKV</p>
+      <h1 id="subject-title">Muziek</h1>
+      <p>Mijn ontdekkingen, ervaringen en opdrachten.</p>
+    </section>
+    <section class="assignments" aria-labelledby="assignments-title">
+      <p class="eyebrow"><span class="eyebrow-line"></span> mijn werk</p>
+      <h2 id="assignments-title">Opdrachten</h2>
+      <div class="upload-controls">
+        <button class="upload-button" type="button" id="add-file">+ Bestand toevoegen</button>
+        <input type="file" id="file-input" multiple hidden />
+        <p class="storage-note">Je bestanden blijven in deze browser op dit apparaat. Ze worden niet online gepubliceerd. Bewaar ook je originele bestanden.</p>
+        <p id="upload-status" role="status" aria-live="polite"></p>
+      </div>
+      <div class="sort-controls">
+        <label for="file-sort">Sorteren op</label>
+        <select id="file-sort">
+          <option value="newest">Nieuw toegevoegd</option>
+          <option value="oldest">Oud toegevoegd</option>
+          <option value="recent">Recent geopend</option>
+          <option value="largest">Grootte: groot naar klein</option>
+          <option value="smallest">Grootte: klein naar groot</option>
+          <option value="az">Alfabetisch: A tot Z</option>
+          <option value="za">Alfabetisch: Z tot A</option>
+        </select>
+      </div>
+      <div class="assignments-list">
+        <div class="assignments-empty"><span aria-hidden="true">+</span><h3>Hier komt mijn werk</h3><p>Binnenkort vind je hier mijn opdrachten voor Muziek.</p></div>
+      </div>
+    </section></main>
+  <footer><span>LEX CKV &copy; 2026</span><a href="index.html#vormen">Terug naar de vormen &uarr;</a></footer>
+  <script src="script.js"></script>
+</body>
+</html>
