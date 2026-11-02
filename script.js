@@ -123,7 +123,8 @@ if (document.querySelector('#file-search')) {
   const searchInput = document.querySelector('#file-search');
   const searchStatus = document.querySelector('#search-status');
   const searchResults = document.querySelector('#search-results');
-  let searchRecords = [];
+  let searchRecords = [...publicFiles];
+  searchInput.disabled = false;
   const normalize = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('nl-NL');
   function searchFiles() {
     searchResults.replaceChildren();
@@ -135,7 +136,7 @@ if (document.querySelector('#file-search')) {
     const matches = searchRecords.filter((record) => normalize(record.name).includes(query));
     searchStatus.textContent = matches.length ? `${matches.length} bestand(en) gevonden.` : 'Geen bestanden gevonden. Probeer een andere bestandsnaam.';
     matches.forEach((record) => {
-      const pages = { Dans: 'dans.html', Film: 'film.html', Muziek: 'muziek.html', Schilderkunst: 'schilderkunst.html' };
+
       const link = document.createElement('a');
       link.className = 'file-row search-result-link';
       link.href = `${'opdrachten.html'}?bestand=${encodeURIComponent(record.id)}`;
@@ -153,6 +154,21 @@ if (document.querySelector('#file-search')) {
     });
   }
   searchInput.addEventListener('input', searchFiles);
+  searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const first = searchResults.querySelector('a');
+      if (first) { event.preventDefault(); first.click(); }
+    }
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      searchResults.querySelector('a')?.focus();
+    }
+    if (event.key === 'Escape') {
+      searchInput.value = '';
+      searchFiles();
+    }
+  });
+  searchFiles();
   const sortSelect = document.querySelector('#file-sort');
   const nameOrder = new Intl.Collator('nl', { numeric: true, sensitivity: 'base' });
   function compareFiles(a, b) {
@@ -185,29 +201,6 @@ if (document.querySelector('#file-search')) {
     searchInput.disabled = false;
     searchRecords = records;
     searchFiles();
-    const homeFiles = document.querySelector('#home-files');
-    if (homeFiles) {
-      homeFiles.replaceChildren();
-      records.slice().sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0)).slice(0, 4).forEach((record, index) => {
-        const link = document.createElement('a');
-        link.className = 'home-file';
-        link.href = 'opdrachten.html?bestand=' + encodeURIComponent(record.id);
-        const number = document.createElement('span');
-        number.className = 'home-file-number';
-        number.textContent = String(index + 1).padStart(2, '0');
-        const detail = document.createElement('div');
-        const title = document.createElement('h3');
-        title.textContent = record.name.replace(/\.[^.]+$/, '');
-        const type = document.createElement('p');
-        type.textContent = record.file.type.startsWith('image/') ? 'Creatief werk · Afbeelding' : 'Opdracht · Document';
-        detail.append(title, type);
-        const arrow = document.createElement('span');
-        arrow.textContent = '↗';
-        arrow.setAttribute('aria-hidden', 'true');
-        link.append(number, detail, arrow);
-        homeFiles.append(link);
-      });
-    }
     const count = document.querySelector('#file-count');
     if (count) count.textContent = records.length;
     if (!list) return;
