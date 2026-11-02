@@ -255,7 +255,25 @@ if (document.querySelector('#file-search')) {
       });
       actions.append(download);
       if (!record.url) actions.append(remove);
-      row.append(details, actions);
+      const cover = document.createElement('div');
+      cover.className = 'work-cover';
+      if (record.file.type.startsWith('image/')) {
+        const image = document.createElement('img');
+        image.src = url;
+        image.alt = record.name;
+        image.loading = 'lazy';
+        cover.append(image);
+      } else {
+        const format = document.createElement('span');
+        format.textContent = record.name.split('.').pop().toUpperCase();
+        const caption = document.createElement('strong');
+        caption.textContent = record.name.replace(/\.[^.]+$/, '');
+        cover.append(format, caption);
+      }
+      const hint = document.createElement('p');
+      hint.className = 'work-hint';
+      hint.textContent = 'Dubbelklik om te bekijken';
+      row.append(cover, details, actions, hint);
       list.append(row);
     });
   }
