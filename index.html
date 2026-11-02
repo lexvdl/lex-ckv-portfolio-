@@ -3,40 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Het CKV-portfolio van Lex. Bekijk mijn opdrachten, ervaringen en creatief werk." />
-  <title>Portfolio lex CKV</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=gallery2" />
+  <meta name="description" content="Het CKV-portfolio van Lex. Alle opdrachten en bestanden overzichtelijk bij elkaar." />
+  <title>Overzicht | Lex CKV</title>
+  <link rel="stylesheet" href="styles.css?v=studio3" />
 </head>
 <body class="home-page">
+<a class="skip-link" href="#main">Naar inhoud</a>
+<aside class="sidebar">
+  <a class="brand" href="index.html"><span class="brand-mark">L.</span><span>Lex<span class="brand-sub">CKV PORTFOLIO</span></span></a>
+  <p class="nav-label">MIJN PORTFOLIO</p>
+  <nav class="nav" aria-label="Hoofdnavigatie">
+    <a href="index.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"/></svg>Overzicht</a>
+    <a href="opdrachten.html" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7l2 3h9v12H3Z"/></svg>Mijn opdrachten</a>
+  </nav>
+  <div class="sidebar-note"><span class="status-dot"></span> Ruimte voor mijn ontwikkeling<p>Kunst, cultuur en een eigen blik.</p></div>
+</aside>
+<div class="app-shell">
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="Portfolio Lex CKV startpagina"><span class="brand-dot"></span>LEX CKV</a>
-<section class="portfolio-search hero-search topbar-search" aria-labelledby="search-title">
-      <p class="eyebrow">vind je werk</p>
-      <h2 id="search-title">Zoek een bestand</h2>
-      <label for="file-search">Zoek in mijn opdrachten</label>
-      <input id="file-search" type="search" placeholder="Zoeken" disabled aria-controls="search-results" />
+    <span class="breadcrumb">Portfolio <span>/</span> Overzicht</span>
+    <section class="portfolio-search" aria-label="Zoek bestanden">
+      <label class="sr-only" for="file-search">Zoek op bestandsnaam</label>
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg>
+      <input id="file-search" type="search" placeholder="Zoek een opdracht..." disabled aria-controls="search-results" />
       <p id="search-status" role="status">Bestanden laden...</p>
-      <div id="search-results" class="assignments-list"></div>    </section>
-    <nav class="nav" aria-label="Hoofdnavigatie">
-      <a href="opdrachten.html">Mijn opdrachten</a>
-    </nav>
-    <button class="menu-button" type="button" aria-label="Menu openen" aria-expanded="false"><span></span><span></span></button>
+      <div id="search-results"></div>
+    </section>
   </header>
-
-  <main id="top">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> Culturele en kunstzinnige vorming</p>
-        <h1 id="hero-title">Portfolio <em>Lex</em></h1>
-        <p class="hero-intro">Welkom! Ik ben Lex. Hier vind je mijn CKV-opdrachten, ervaringen en creatief werk.</p>
-        <a class="arrow-link" href="opdrachten.html">Bekijk mijn opdrachten <span aria-hidden="true">↘</span></a>
-      </div>    </section>
-
+  <main id="main">
+<section class="welcome" aria-labelledby="hero-title"><p class="eyebrow">CULTURELE EN KUNSTZINNIGE VORMING</p><h1 id="hero-title">Mijn werk.<br />Mijn blik. <em>Mijn portfolio.</em></h1><p class="welcome-intro">Welkom, ik ben Lex. Hier verzamel ik mijn CKV-opdrachten en laat ik zien wat ik ontdek, maak en leer.</p><a class="button primary" href="opdrachten.html">Bekijk mijn opdrachten <span aria-hidden="true">&rarr;</span></a><span class="welcome-index" aria-hidden="true">LEX / CKV</span></section>
+<section class="home-work" aria-labelledby="recent-title"><div class="section-heading"><div><p class="eyebrow">VERKEN MIJN WERK</p><h2 id="recent-title">Opdrachten in mijn portfolio</h2></div><a class="text-link" href="opdrachten.html">Alles bekijken &rarr;</a></div><div id="home-files" class="home-files"><p>Opdrachten worden geladen...</p></div></section>
+<div class="home-note"><span aria-hidden="true">↗</span><p><strong>Van eerste idee tot eindresultaat.</strong> Verslagen, onderzoek en creatief werk vind je samen bij mijn opdrachten.</p></div>
 </main>
-  <footer><span>LEX CKV © 2026</span><span>gemaakt om te blijven kijken</span><a href="#top">naar boven ↑</a></footer>
-  <script src="script.js?v=gallery1"></script>
+  <footer><span>Lex CKV</span><span>Een verzameling werk, ervaringen en ideeën.</span></footer>
+</div>
+<script src="script.js?v=studio3"></script>
 </body>
 </html>

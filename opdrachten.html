@@ -3,57 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Al mijn CKV-opdrachten en bestanden op één plek." />
-  <title>Mijn opdrachten | Portfolio lex CKV</title>
-  <link rel="stylesheet" href="styles.css?v=gallery1" />
+  <meta name="description" content="Het CKV-portfolio van Lex. Alle opdrachten en bestanden overzichtelijk bij elkaar." />
+  <title>Mijn opdrachten | Lex CKV</title>
+  <link rel="stylesheet" href="styles.css?v=studio3" />
 </head>
-<body>
+<body class="work-page">
+<a class="skip-link" href="#main">Naar inhoud</a>
+<aside class="sidebar">
+  <a class="brand" href="index.html"><span class="brand-mark">L.</span><span>Lex<span class="brand-sub">CKV PORTFOLIO</span></span></a>
+  <p class="nav-label">MIJN PORTFOLIO</p>
+  <nav class="nav" aria-label="Hoofdnavigatie">
+    <a href="index.html" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"/></svg>Overzicht</a>
+    <a href="opdrachten.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h7l2 3h9v12H3Z"/></svg>Mijn opdrachten</a>
+  </nav>
+  <div class="sidebar-note"><span class="status-dot"></span> Ruimte voor mijn ontwikkeling<p>Kunst, cultuur en een eigen blik.</p></div>
+</aside>
+<div class="app-shell">
   <header class="topbar">
-    <a class="brand" href="index.html"><span class="brand-dot"></span>LEX CKV</a>
-
-    <nav class="nav" aria-label="Hoofdnavigatie"><a href="index.html">Home</a></nav>
-    <button class="menu-button" type="button" aria-label="Menu openen" aria-expanded="false"><span></span><span></span></button>
-  </header>
-  <main id="top">
-    <section class="subject-hero" aria-labelledby="subject-title">
-      <a class="arrow-link" href="index.html">&larr; Terug naar home</a>
-      <p class="eyebrow">Portfolio Lex CKV</p>
-      <h1 id="subject-title">Mijn opdrachten</h1>
-      <p>Mijn ontdekkingen, ervaringen en opdrachten.</p>
-    </section>
-    <section class="assignments" aria-labelledby="assignments-title">
-      <p class="eyebrow"><span class="eyebrow-line"></span> mijn werk</p>
-      <h2 id="assignments-title">Opdrachten</h2>
-      <div class="upload-controls">
-        <button class="upload-button" type="button" id="add-file">+ Lokaal bestand toevoegen</button>
-        <input type="file" id="file-input" multiple hidden />
-        <p class="storage-note">Je bestanden blijven in deze browser op dit apparaat. Ze worden niet online gepubliceerd. Bewaar ook je originele bestanden.</p>
-        <p id="upload-status" role="status" aria-live="polite"></p>
-      </div>
-<section class="portfolio-search work-search" aria-labelledby="search-title">
-      <p class="eyebrow">vind je werk</p>
-      <h2 id="search-title">Zoek een bestand</h2>
-      <label for="file-search">Zoek op bestandsnaam in alle kunstvormen</label>
-      <input id="file-search" type="search" placeholder="Zoeken" disabled aria-controls="search-results" />
+    <span class="breadcrumb">Portfolio <span>/</span> Mijn opdrachten</span>
+    <section class="portfolio-search" aria-label="Zoek bestanden">
+      <label class="sr-only" for="file-search">Zoek op bestandsnaam</label>
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></svg>
+      <input id="file-search" type="search" placeholder="Zoek een opdracht..." disabled aria-controls="search-results" />
       <p id="search-status" role="status">Bestanden laden...</p>
-      <div id="search-results" class="assignments-list"></div>
-    </section><div class="sort-controls">
-        <label for="file-sort">Sorteren op</label>
-        <select id="file-sort">
-          <option value="newest">Nieuw toegevoegd</option>
-          <option value="oldest">Oud toegevoegd</option>
-          <option value="recent">Recent geopend</option>
-          <option value="largest">Grootte: groot naar klein</option>
-          <option value="smallest">Grootte: klein naar groot</option>
-          <option value="az">Alfabetisch: A tot Z</option>
-          <option value="za">Alfabetisch: Z tot A</option>
-        </select>
-      </div>
-      <div class="assignments-list">
-        <div class="assignments-empty"><span aria-hidden="true">+</span><h3>Hier komt mijn werk</h3><p>Hier verschijnen mijn opdrachten en bestanden.</p></div>
-      </div>
-    </section></main>
-  <footer><span>LEX CKV &copy; 2026</span><a href="index.html">Terug naar home &uarr;</a></footer>
-  <script src="script.js?v=gallery1"></script>
+      <div id="search-results"></div>
+    </section>
+  </header>
+  <main id="main">    <section class="page-intro" aria-labelledby="subject-title"><p class="eyebrow">MIJN PORTFOLIO</p><h1 id="subject-title">Mijn opdrachten</h1><p>Alle verslagen en creatief werk op één plek.</p></section>
+    <section class="assignments" aria-labelledby="assignments-title">
+      <div class="work-toolbar"><div><h2 id="assignments-title">Alle bestanden <span id="file-count" class="count-badge">0</span></h2><p class="list-help">Klik om te selecteren. Dubbelklik of druk op Enter om te openen.</p></div><div class="sort-controls"><label for="file-sort">Sorteren op</label><select id="file-sort"><option value="newest">Nieuw toegevoegd</option><option value="oldest">Oud toegevoegd</option><option value="recent">Recent geopend</option><option value="largest">Grootste eerst</option><option value="smallest">Kleinste eerst</option><option value="az">Naam: A–Z</option><option value="za">Naam: Z–A</option></select></div></div>
+      <div class="list-columns" aria-hidden="true"><span>BESTAND</span><span>ACTIES</span></div>
+      <div class="assignments-list"><div class="assignments-empty"><h3>Nog geen bestanden</h3><p>Hier verschijnen mijn opdrachten.</p></div></div>
+      <details class="local-upload"><summary>Bestanden op dit apparaat toevoegen</summary><div class="upload-controls"><p class="storage-note">Deze bestanden zijn alleen zichtbaar in jouw browser. Openbare opdrachten worden via GitHub gepubliceerd.</p><button class="button secondary" type="button" id="add-file">+ Lokaal bestand toevoegen</button><input type="file" id="file-input" multiple hidden /></div></details>
+      <p id="upload-status" role="status" aria-live="polite"></p>
+    </section>  </main>
+  <footer><span>Lex CKV</span><span>Een verzameling werk, ervaringen en ideeën.</span></footer>
+</div>
+<script src="script.js?v=studio3"></script>
 </body>
 </html>

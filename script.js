@@ -1,13 +1,13 @@
 const menuButton = document.querySelector('.menu-button');
 const nav = document.querySelector('.nav');
-menuButton.addEventListener('click', () => {
+menuButton?.addEventListener('click', () => {
   const isOpen = nav.classList.toggle('open');
   menuButton.setAttribute('aria-expanded', String(isOpen));
 });
 document.querySelectorAll('.nav a').forEach((link) => {
   link.addEventListener('click', () => {
     nav.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton?.setAttribute('aria-expanded', 'false');
   });
 });
 // Store each art form's files locally, including binary file contents.
@@ -185,6 +185,31 @@ if (document.querySelector('#file-search')) {
     searchInput.disabled = false;
     searchRecords = records;
     searchFiles();
+    const homeFiles = document.querySelector('#home-files');
+    if (homeFiles) {
+      homeFiles.replaceChildren();
+      records.slice().sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0)).slice(0, 4).forEach((record, index) => {
+        const link = document.createElement('a');
+        link.className = 'home-file';
+        link.href = 'opdrachten.html?bestand=' + encodeURIComponent(record.id);
+        const number = document.createElement('span');
+        number.className = 'home-file-number';
+        number.textContent = String(index + 1).padStart(2, '0');
+        const detail = document.createElement('div');
+        const title = document.createElement('h3');
+        title.textContent = record.name.replace(/\.[^.]+$/, '');
+        const type = document.createElement('p');
+        type.textContent = record.file.type.startsWith('image/') ? 'Creatief werk · Afbeelding' : 'Opdracht · Document';
+        detail.append(title, type);
+        const arrow = document.createElement('span');
+        arrow.textContent = '↗';
+        arrow.setAttribute('aria-hidden', 'true');
+        link.append(number, detail, arrow);
+        homeFiles.append(link);
+      });
+    }
+    const count = document.querySelector('#file-count');
+    if (count) count.textContent = records.length;
     if (!list) return;
     urls.splice(0).forEach((url) => URL.revokeObjectURL(url));
     list.replaceChildren();
@@ -256,24 +281,17 @@ if (document.querySelector('#file-search')) {
       actions.append(download);
       if (!record.url) actions.append(remove);
       const cover = document.createElement('div');
-      cover.className = 'work-cover';
+      cover.className = 'file-thumbnail';
       if (record.file.type.startsWith('image/')) {
         const image = document.createElement('img');
         image.src = url;
-        image.alt = record.name;
+        image.alt = '';
         image.loading = 'lazy';
         cover.append(image);
       } else {
-        const format = document.createElement('span');
-        format.textContent = record.name.split('.').pop().toUpperCase();
-        const caption = document.createElement('strong');
-        caption.textContent = record.name.replace(/\.[^.]+$/, '');
-        cover.append(format, caption);
+        cover.textContent = record.name.split('.').pop().toUpperCase();
       }
-      const hint = document.createElement('p');
-      hint.className = 'work-hint';
-      hint.textContent = 'Dubbelklik om te bekijken';
-      row.append(cover, details, actions, hint);
+      row.append(cover, details, actions);
       list.append(row);
     });
   }
