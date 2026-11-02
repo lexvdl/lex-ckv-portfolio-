@@ -38,88 +38,76 @@ if (document.querySelector('#file-search')) {
     });
   }
 
-  const viewer = document.createElement('dialog');
-  viewer.className = 'file-viewer';
-  viewer.setAttribute('aria-labelledby', 'preview-title');
-  viewer.innerHTML = '<div class="preview-header"><h2 id="preview-title"></h2><button type="button" autofocus>Sluiten</button></div><div class="preview-body"></div><p class="preview-footer">Geen voorbeeld zichtbaar? <a>Download het bestand</a></p>';
-  document.body.append(viewer);
-  const previewBody = viewer.querySelector('.preview-body');
-  let previewUrl;
-  let previewVersion = 0;
-  viewer.querySelector('button').addEventListener('click', () => viewer.close());
-  viewer.addEventListener('close', () => {
-    previewVersion += 1;
-    previewBody.replaceChildren();
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    previewUrl = null;
-  });
+  function openFile(record) {
+    window.location.href = 'bestand.html?bestand=' + encodeURIComponent(record.id);
+  }
 
-  async function openFile(record) {
-    const version = ++previewVersion;
-    previewBody.replaceChildren();
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
+  let documentObjectUrl;
+  let displayedId;
+  async function showDocument() {
+    const content = document.querySelector('#document-content');
+    if (!content) return;
+    const id = new URLSearchParams(window.location.search).get('bestand');
+    const record = searchRecords.find((item) => String(item.id) === id);
+    const title = document.querySelector('#document-title');
+    const message = document.querySelector('#document-status');
+    if (!record) {
+      title.textContent = 'Bestand niet gevonden';
+      message.textContent = 'Dit bestand is verwijderd of alleen beschikbaar in de browser waarin het is toegevoegd.';
+      return;
+    }
+    if (displayedId === record.id) return;
+    displayedId = record.id;
+    title.textContent = record.name;
+    document.title = record.name + ' | Lex CKV';
+    document.querySelector('#document-back').href = 'opdrachten.html?bestand=' + encodeURIComponent(record.id);
     const extension = record.name.split('.').pop().toLowerCase();
     const type = record.file.type;
     const isPdf = type === 'application/pdf' || extension === 'pdf';
-    previewUrl = record.url || URL.createObjectURL(isPdf ? record.file.slice(0, record.file.size, 'application/pdf') : record.file);
-    viewer.querySelector('h2').textContent = record.name;
-    const download = viewer.querySelector('a');
-    download.href = previewUrl;
+    const url = record.url || URL.createObjectURL(isPdf ? record.file.slice(0, record.file.size, 'application/pdf') : record.file);
+    if (!record.url) documentObjectUrl = url;
+    const download = document.querySelector('#document-download');
+    download.href = url;
     download.download = record.name;
-    viewer.showModal();
-    // Update only an existing record so a deleted file cannot be restored accidentally.
-    if (record.url) {
-      record.lastOpenedAt = Date.now();
-      renderFiles();
-    } else transaction('readwrite', (store) => {
-      const request = store.get(record.id);
-      request.onsuccess = () => {
-        if (request.result) store.put({ ...request.result, lastOpenedAt: Date.now() });
-      };
-      return request;
-    }).then(() => renderFiles()).catch(() => {
-      status.textContent = 'Het bestand is geopend, maar de recent-geopendlijst kon niet worden bijgewerkt.';
-    });
+    download.hidden = false;
+    content.replaceChildren();
     let element;
-    if (type.startsWith('image/') || /^(png|jpe?g|gif|webp|avif|bmp|svg)$/.test(extension)) {
-      element = document.createElement('img');
-      element.alt = record.name;
-      element.src = previewUrl;
-    } else if (isPdf) {
+    if (isPdf) {
       element = document.createElement('iframe');
-      element.title = `Voorbeeld van ${record.name}`;
-      element.src = previewUrl;
-    } else if (type.startsWith('video/') || /^(mp4|webm|mov)$/.test(extension)) {
-      element = document.createElement('video');
+      element.title = record.name;
+      element.src = url + '#view=FitH';
+      message.textContent = 'Blader door alle pagina’s in het document. Geen weergave? Gebruik Downloaden.';
+    } else if (type.startsWith('image/') || /^(png|jpe?g|gif|webp|avif|bmp|svg)$/.test(extension)) {
+      element = document.createElement('img');
+      element.src = url;
+      element.alt = record.name;
+    } else if (type.startsWith('video/') || type.startsWith('audio/')) {
+      element = document.createElement(type.startsWith('video/') ? 'video' : 'audio');
       element.controls = true;
-      element.src = previewUrl;
-    } else if (type.startsWith('audio/') || /^(mp3|wav|ogg|m4a|flac)$/.test(extension)) {
-      element = document.createElement('audio');
-      element.controls = true;
-      element.src = previewUrl;
+      element.src = url;
     } else if (type.startsWith('text/') || /^(txt|md|csv|json)$/.test(extension)) {
       element = document.createElement('pre');
       element.textContent = 'Tekst laden...';
-      previewBody.append(element);
-      try {
-        const text = await record.file.slice(0, 1024 * 1024).text();
-        if (version !== previewVersion) return;
-        element.textContent = text + (record.file.size > 1024 * 1024 ? '\n\nVoorbeeld ingekort. Download het bestand voor de volledige tekst.' : '');
-      } catch {
-        if (version === previewVersion) element.textContent = 'Deze tekst kon niet worden geladen. Je kunt het bestand downloaden.';
-      }
-      return;
+      record.file.text().then((text) => { element.textContent = text; }).catch(() => {
+        element.textContent = 'De tekst kon niet worden geladen. Je kunt het bestand downloaden.';
+      });
     } else {
       element = document.createElement('p');
-      element.textContent = 'Voor dit bestandstype is geen voorbeeld beschikbaar. Je kunt het bestand downloaden. Sla Word- of PowerPoint-bestanden op als pdf om ze hier te bekijken.';
+      element.textContent = 'Dit bestandstype kan de browser niet tonen. Download het bestand of voeg een pdf-versie toe.';
     }
-    element.addEventListener('error', () => {
-      const message = document.createElement('p');
-      message.textContent = 'Dit bestand kan niet worden weergegeven in deze browser. Gebruik de downloadlink hieronder.';
-      element.replaceWith(message);
-    });
-    previewBody.append(element);
+    element.addEventListener('error', () => { message.textContent = 'Weergeven is niet gelukt. Gebruik Downloaden om het bestand te openen.'; });
+    content.append(element);
+    if (record.url) {
+      try { localStorage.setItem('lex-opened-' + record.id, String(Date.now())); } catch {}
+    } else if (db) {
+      transaction('readwrite', (store) => {
+        const request = store.get(record.id);
+        request.onsuccess = () => { if (request.result) store.put({ ...request.result, lastOpenedAt: Date.now() }); };
+        return request;
+      }).catch(() => {});
+    }
   }
+  window.addEventListener('pagehide', () => { if (documentObjectUrl) URL.revokeObjectURL(documentObjectUrl); });
   const searchInput = document.querySelector('#file-search');
   const searchStatus = document.querySelector('#search-status');
   const searchResults = document.querySelector('#search-results');
@@ -199,7 +187,11 @@ if (document.querySelector('#file-search')) {
       !retiredUploads.some((old) => old.name === file.name && old.size === file.file.size)
     )];
     searchInput.disabled = false;
+    for (const record of publicFiles) {
+      try { record.lastOpenedAt = Number(localStorage.getItem('lex-opened-' + record.id)) || 0; } catch {}
+    }
     searchRecords = records;
+    await showDocument();
     searchFiles();
     const count = document.querySelector('#file-count');
     if (count) count.textContent = records.length;
