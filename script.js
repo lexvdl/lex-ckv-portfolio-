@@ -127,7 +127,7 @@ if (document.querySelector('#file-search')) {
     searchResults.replaceChildren();
     const query = normalize(searchInput.value.trim());
     if (!query) {
-      searchStatus.textContent = 'Typ een bestandsnaam om in alle vier de kunstvormen te zoeken.';
+      searchStatus.textContent = 'Typ een bestandsnaam om in mijn opdrachten te zoeken.';
       return;
     }
     const matches = searchRecords.filter((record) => normalize(record.name).includes(query));
@@ -136,12 +136,12 @@ if (document.querySelector('#file-search')) {
       const pages = { Dans: 'dans.html', Film: 'film.html', Muziek: 'muziek.html', Schilderkunst: 'schilderkunst.html' };
       const link = document.createElement('a');
       link.className = 'file-row search-result-link';
-      link.href = `${pages[record.subject] || 'index.html'}?bestand=${encodeURIComponent(record.id)}`;
+      link.href = `${'opdrachten.html'}?bestand=${encodeURIComponent(record.id)}`;
       const details = document.createElement('div');
       const title = document.createElement('h3');
       title.textContent = record.name;
       const category = document.createElement('p');
-      category.textContent = `Bekijk in ${record.subject}`;
+      category.textContent = 'Mijn opdrachten';
       details.append(title, category);
       const arrow = document.createElement('span');
       arrow.textContent = '\u2192';
@@ -177,7 +177,7 @@ if (document.querySelector('#file-search')) {
     if (!list) return;
     urls.splice(0).forEach((url) => URL.revokeObjectURL(url));
     list.replaceChildren();
-    const files = records.filter((record) => record.subject === subject).sort(compareFiles);
+    const files = records.slice().sort(compareFiles);
     if (!files.length && emptyState) list.append(emptyState.cloneNode(true));
     files.forEach((record) => {
       const row = document.createElement('article');
@@ -263,7 +263,7 @@ if (document.querySelector('#file-search')) {
       await renderFiles();
       const requestedId = new URLSearchParams(window.location.search).get('bestand');
       if (requestedId && subject) {
-        const record = searchRecords.find((item) => String(item.id) === requestedId && item.subject === subject);
+        const record = searchRecords.find((item) => String(item.id) === requestedId);
         if (record) {
           const row = document.getElementById('bestand-' + record.id);
           row?.classList.add('selected-file');
