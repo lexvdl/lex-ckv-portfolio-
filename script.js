@@ -42,6 +42,44 @@ if (document.querySelector('#file-search')) {
     window.location.href = 'bestand.html?bestand=' + encodeURIComponent(record.id);
   }
 
+  async function renderPdfPages(url, container, message) {
+    try {
+      const base = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.5.438/';
+      const pdfjs = await import('./vendor/pdf.mjs');
+      pdfjs.GlobalWorkerOptions.workerSrc = new URL('./vendor/pdf.worker.mjs', window.location.href).href;
+      const pdf = await pdfjs.getDocument({ url, cMapUrl: base + 'cmaps/', cMapPacked: true, standardFontDataUrl: base + 'standard_fonts/', wasmUrl: base + 'wasm/' }).promise;
+      for (let number = 1; number <= pdf.numPages; number++) {
+        const page = await pdf.getPage(number);
+        const original = page.getViewport({ scale: 1 });
+        const width = Math.min(container.clientWidth || 900, 1050);
+        const viewport = page.getViewport({ scale: width / original.width });
+        const section = document.createElement('section');
+        section.className = 'pdf-page';
+        section.setAttribute('aria-label', `Pagina ${number} van ${pdf.numPages}`);
+        section.style.aspectRatio = `${original.width} / ${original.height}`;
+        const canvas = document.createElement('canvas');
+        canvas.setAttribute('aria-hidden', 'true');
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(viewport.width * ratio);
+        canvas.height = Math.floor(viewport.height * ratio);
+        section.append(canvas);
+        container.append(section);
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport, transform: [ratio, 0, 0, ratio, 0, 0] }).promise;
+        const text = await page.getTextContent();
+        const accessibleText = document.createElement('div');
+        accessibleText.className = 'sr-only';
+        accessibleText.textContent = text.items.map((item) => item.str || '').join(' ');
+        section.append(accessibleText);
+        message.textContent = `Pagina ${number} van ${pdf.numPages} geladen...`;
+        page.cleanup();
+      }
+      message.textContent = `${pdf.numPages} pagina’s · Scroll naar beneden om de hele opdracht te lezen.`;
+      await pdf.destroy();
+    } catch (error) {
+      message.textContent = 'De opdracht kon niet volledig worden geladen. Vernieuw de pagina of gebruik Downloaden.';
+      console.error('PDF laden mislukt:', error);
+    }
+  }
   let documentObjectUrl;
   let displayedId;
   async function showDocument() {
@@ -73,10 +111,10 @@ if (document.querySelector('#file-search')) {
     content.replaceChildren();
     let element;
     if (isPdf) {
-      element = document.createElement('iframe');
-      element.title = record.name;
-      element.src = url + '#view=FitH';
-      message.textContent = 'Blader door alle pagina’s in het document. Geen weergave? Gebruik Downloaden.';
+      element = document.createElement('div');
+      element.className = 'pdf-pages';
+      message.textContent = 'Opdracht laden...';
+      renderPdfPages(url, element, message);
     } else if (type.startsWith('image/') || /^(png|jpe?g|gif|webp|avif|bmp|svg)$/.test(extension)) {
       element = document.createElement('img');
       element.src = url;

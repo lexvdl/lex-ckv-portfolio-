@@ -25,3 +25,8 @@
 #document-content pre { padding: 24px; white-space: pre-wrap; overflow-wrap: anywhere; }
 #document-content > p { padding: 24px; }
 @media(max-width:560px) { .document-toolbar { align-items: flex-start; flex-wrap: wrap; } #document-content iframe { min-height: 420px; } }
+/* PDF pages participate in normal website scrolling. */
+#document-content:has(.pdf-pages) { border: 0; border-radius: 0; background: transparent; overflow: visible; }
+.pdf-pages { width: 100%; max-width: 1050px; margin: 0 auto; }
+.pdf-page { position: relative; width: 100%; margin: 0 0 24px; background: white; box-shadow: 0 2px 12px #152b3012; }
+.pdf-page canvas { display: block; width: 100%; height: auto; }
