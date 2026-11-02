@@ -1,7 +1,7 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
-const files = new Set(['index.html', 'opdrachten.html', 'dans.html', 'film.html', 'muziek.html', 'schilderkunst.html', 'styles.css', 'script.js', '69fee023-5ec6-438b-8854-d4e3b5f786db_CKV_CZP_verslag.pdf', '7094285f-47f3-4fd1-9875-b4127c6942c1_Banksy_opdrachten_.pdf', 'c243f0e8-3c0c-4d9f-87be-3fda1c0690ba_CAP_.pdf', 'CKV CZP verslag.pdf', 'photo_2026-10-19_08-13-48.jpg', 'photo_2026-11-01_22-08-55.jpg']);
+const files = new Set(['index.html', 'opdrachten.html', 'dans.html', 'film.html', 'muziek.html', 'schilderkunst.html', 'styles.css', 'script.js', '69fee023-5ec6-438b-8854-d4e3b5f786db_CKV_CZP_verslag.pdf', '7094285f-47f3-4fd1-9875-b4127c6942c1_Banksy_opdrachten_.pdf', 'c243f0e8-3c0c-4d9f-87be-3fda1c0690ba_CAP_.pdf', 'photo_2026-11-01_22-08-55.jpg']);
 const types = { '.pdf': 'application/pdf', '.jpg': 'image/jpeg', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
 const server = http.createServer((req, res) => {
   let name;

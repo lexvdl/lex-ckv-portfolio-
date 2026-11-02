@@ -20,7 +20,6 @@ if (document.querySelector('#file-search')) {
   const emptyState = list?.firstElementChild?.cloneNode(true);
   const publicFiles = [
     { id: 'public-photo', name: 'CKV-collage.jpg', subject: 'Mijn opdrachten', url: 'photo_2026-11-01_22-08-55.jpg', addedAt: 1793577600000, file: { size: 157903, type: 'image/jpeg' } },
-    { id: 'public-ckv', name: 'CKV CZP verslag (eerdere upload).pdf', subject: 'Mijn opdrachten', url: 'CKV%20CZP%20verslag.pdf', addedAt: 1792400000001, file: { size: 621879, type: 'application/pdf' } },
     { id: 'public-ckv-new', name: 'CKV CZP verslag.pdf', subject: 'Mijn opdrachten', url: '69fee023-5ec6-438b-8854-d4e3b5f786db_CKV_CZP_verslag.pdf', addedAt: 1793577600001, file: { size: 5386866, type: 'application/pdf' } },
     { id: 'public-banksy', name: 'Banksy opdrachten.pdf', subject: 'Mijn opdrachten', url: '7094285f-47f3-4fd1-9875-b4127c6942c1_Banksy_opdrachten_.pdf', addedAt: 1793577600002, file: { size: 1753838, type: 'application/pdf' } },
     { id: 'public-cap', name: 'CAP.pdf', subject: 'Mijn opdrachten', url: 'c243f0e8-3c0c-4d9f-87be-3fda1c0690ba_CAP_.pdf', addedAt: 1793577600003, file: { size: 85333, type: 'application/pdf' } }
