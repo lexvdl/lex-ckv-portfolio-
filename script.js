@@ -172,7 +172,16 @@ if (document.querySelector('#file-search')) {
     renderFiles().catch(() => { status.textContent = 'Sorteren is niet gelukt. Probeer het opnieuw.'; });
   });
   async function renderFiles() {
-    const records = [...publicFiles, ...(db ? await transaction('readonly', (store) => store.getAll()) : [])];
+    const localFiles = db ? await transaction('readonly', (store) => store.getAll()) : [];
+    // Hide only known retired uploads; leave other browser files untouched.
+    const retiredUploads = [
+      { name: 'CKV CZP verslag.pdf', size: 621879 },
+      { name: 'CKV CZP verslag (eerdere upload).pdf', size: 621879 },
+      { name: 'photo_2026-10-19_08-13-48.jpg', size: 157903 }
+    ];
+    const records = [...publicFiles, ...localFiles.filter((file) =>
+      !retiredUploads.some((old) => old.name === file.name && old.size === file.file.size)
+    )];
     searchInput.disabled = false;
     searchRecords = records;
     searchFiles();
